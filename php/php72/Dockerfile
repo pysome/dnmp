@@ -105,7 +105,14 @@ RUN apt-get update \
 #RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
 
 # Install Xdebug extension from source
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+#RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN curl -L -o /tmp/xdebug.tgz https://xdebug.org/files/xdebug-2.6.0.tgz \
+    && tar -xzvf /tmp/xdebug.tgz \
+    && rm -r /tmp/xdebug.tgz \
+    && mkdir -p /usr/src/php/ext \
+    && mv xdebug-2.6.0 /usr/src/php/ext/xdebug \
+    && docker-php-ext-install xdebug
+
 
 RUN curl -L -o /tmp/redis.tar.gz https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz \
     && tar xfz /tmp/redis.tar.gz \
